@@ -1,0 +1,204 @@
+V40 - Release Candidate
+- V39 bakım/release kontrol araçları eklendi.
+- V40 açılış sağlık raporu JSON çıktısı eklendi.
+- Canlıya hazırlık kontrol BAT dosyası eklendi.
+- API canlı kontrol paket adı V40 olarak güncellendi.
+
+v123 - UI Dengeleme ve Design System
+- Dashboard kart grid yapısı iyileştirildi.
+- Sidebar ve üst bar genişlikleri laptop ekranlara göre optimize edildi.
+- Design system sabitleri eklendi.
+
+v121
+- Giriş ekranındaki çift uyarı/çift deneme sayma sorunu düzeltildi.
+- Oturum kilidi şifre ekranında Enter+buton çift tetikleme engellendi.
+- Satış ekranı responsive davranışı iyileştirildi; küçük genişlikte paneller daha kompakt olur.
+- Durum çubuğu sürüm bilgisi v121 olarak güncellendi.
+
+v109
+- Ürün/Stok işlemleri ayrı modüle taşındı.
+- AnaPencere içindeki ürün alış, stok raporu ve stok düzeltme kodları ayrıştırıldı.
+- Türkçe karakterler korunarak kod kontrolü yapıldı.
+
+
+v112 - Dashboard 2.0 ve mimari temizlik
+- Dashboard hesaplama/arama/durum çubuğu mantığı main.py dışına çıkarıldı: moduller/dashboard_logic.py
+- main.py yaklaşık 280 satır sadeleştirildi.
+- Dashboard ana kartlarına Aylık Satış metriği eklendi.
+- Kasa özeti bölümüne Toplam Kasa kartı eklendi.
+- Dashboard veri yükleme kodu tarih formatlarına karşı daha toleranslı hale getirildi.
+
+v111
+- Ürün/Stok ekranında Son Alış TL ve Kâr/Adet kolonları ana şifreli alana taşındı.
+- Şifreli alan kapalıyken maliyet/kâr bilgileri gizlenir.
+
+v109
+- Ürün listesinde seçili hücrede oluşan beyaz edit/focus çizgisi kaldırıldı.
+- Ürün tablosundaki tooltip kaldırıldı.
+- Fiyat kolonu genişletildi ve sağa hizalandı.
+- Stok kolonu ortalandı.
+
+v94
+- Sol üst logo çakışması düzeltildi.
+- Sidebar koyu lacivert kurumsal tasarıma alındı.
+- Dashboard renkleri profesyonel palete çekildi.
+- Emoji ağırlığı azaltıldı, menü ikonları sadeleştirildi.
+- Kart, arama ve hızlı işlem butonları modernleştirildi.
+
+
+v100 - Responsive satış ekranı
+- Satış ekranında sağ panel ve işlem özeti taşma/kesilme sorunu düzeltildi.
+- Sepet tablosu küçük ekranlarda otomatik daralacak şekilde ayarlandı.
+- Ürün/cari panellerinin minimum genişlikleri responsive hale getirildi.
+- Ürün listesi ipucu yazısının tablo üstüne binmesi düzeltildi.
+- Cari seçim sinyalindeki çift bağlantı kaldırıldı.
+- Sol sidebar logo alanı genişletildi ve üst üste binme azaltıldı.
+
+
+v101 - Beyaz sidebar ve satış ekranı tam responsive düzenleme
+- Siyah sol menü kaldırıldı, açık kurumsal menü yapıldı.
+- Satış ekranında sağ panel taşması düzeltildi.
+- İşlem özeti ve butonlar yan yana responsive hale getirildi.
+- Sepet alanı genişletildi, minimum panel ölçüleri düzenlendi.
+
+v102 - Sidebar grup başlıkları kaldırıldı, menü sadeleştirildi.
+
+V108
+- Satış ekranında seçili cari adı Sepet / Satış Kalemleri başlığının altında bilgi bandı olarak gösterildi.
+
+v110 - Satış Ekranı Maliyet Gizleme
+- Satış ve barkodlu satış ekranlarında alış fiyatı, maliyet ve kâr oranı kolonlarının görünmesini engelleyen güvenlik katmanı eklendi.
+- Ürün Yönetimi ve Kâr/Zarar ekranlarında finansal detaylar korunur.
+
+[v1.1.0 ticari sürüm adayı]
+- Güvenli SQLite backup API aktif edildi.
+- PDF rapor modülü eklendi.
+- Offline lisans/güncelleme altyapısı eklendi.
+- Performans testi eklendi ve 300 cari / 1000 ürün / 5000 hareket ile başarıyla çalıştı.
+
+
+v110
+- Dashboard satış grafiği aç/kapa yapıldı.
+- Grafik varsayılan olarak kapalı hale getirildi.
+- Sürüm bilgileri güncellendi.
+
+
+v112 - Dashboard alan kullanımı iyileştirildi, 6 kartlı üst özet, 6 hızlı işlem ve kasa toplamı eklendi.
+
+
+v113 - Kompakt Dashboard, tema butonu, detay pencereleri.
+
+
+v114
+- Son İşlemler Dashboard üzerinden kompakt hale getirildi.
+- Son İşlemler, Son Satışlar, Kritik Stoklar ve En Çok Satanlar için ayrı pencere açma altyapısı eklendi.
+- Dashboard ana kontrol paneli olarak daha sade kullanıma çekildi.
+v115
+- Tema butonu koyu temada okunur hale getirildi.
+- Açık/gece tema seçimi kaydedilecek şekilde düzenlendi.
+- Arama kutusu tema renklerine uyarlandı.
+- Dashboard başlığı v115 olarak güncellendi.
+- Tema altyapısı için QSS dosya düzeni eklendi.
+
+
+v119 - DAL ERP Next Shell
+- Global üst bar tüm sayfalara taşındı.
+- Global arama ve tema butonu artık sadece Dashboard'da değil, tüm uygulamada sabit.
+- Durum çubuğu ana pencere altına sabitlendi.
+- Aktif sayfa başlığı merkezi olarak güncelleniyor.
+- Yeni modül: moduller/next_shell.py
+
+
+[v120]
+- Modern Sidebar framework eklendi.
+- Sol menü modüler hale getirildi.
+- ERPPage standart sayfa tabanı eklendi.
+- Tema stilleri v120 Fluent Sidebar için güncellendi.
+
+
+[v126] ERP Framework Sprint
+- Ortak ERPPage / ERPPanel / ERPButton / ERPStatCard / ERPToolbar / ERPResponsiveGrid altyapısı eklendi.
+- Üst bar kompaktlaştırıldı.
+- Sidebar genişlikleri ve sürüm metinleri güncellendi.
+- Dashboard sabit referans ekran olarak korundu.
+
+[v128] Satış Ekranı 2.0
+- Satış ekranı ribbon, splitter ve panel dengesiyle yeniden düzenlendi.
+- Responsive satış yerleşimi iyileştirildi.
+
+[v128] Temel Platform Tamamlama Sprint A
+- Cari ve Ürün/Stok modülleri 2.0 altyapısına hazırlandı.
+- Service katmanı ve ortak tablo/arama bileşenleri başlatıldı.
+
+v136
+- Cari Engine klasör yapısı oluşturuldu.
+- Cari sayfası pages/customer/customer_page.py altına taşındı.
+- Eski moduller/cari_ui.py geriye dönük uyumluluk katmanı olarak bırakıldı.
+
+
+## v137 - ERP Widget Library 1.0
+
+- Ortak ERP widget kütüphanesi genişletildi.
+- `ERPToolButton`, `ERPLineEdit`, `ERPComboBox`, `ERPDateEdit`, `ERPForm`, `ERPDialog`, `ERPStatusBar` eklendi.
+- `widgets/__init__.py` yeni bileşenleri dışa aktaracak şekilde güncellendi.
+- `main.py` ve mevcut sayfa uyumluluğu korundu.
+
+
+## v138 - Design System 1.0
+- Ölçü, spacing, radius ve tema renkleri tek merkezde toplandı.
+- `widgets/design_system.py` v138 token sistemi oldu.
+- `widgets/theme_styles.py` ile QSS üretici eklendi.
+- ERP Widget Library token sistemini kullanacak şekilde güncellendi.
+
+
+[V153] Mobil API Altyapısı
+- Aynı Wi-Fi üzerinden mobil bağlantı için FastAPI altyapısı eklendi.
+- Login/token, dashboard, cari, hareket, stok ve tahsilat endpointleri eklendi.
+- Kurulum ve test BAT dosyaları eklendi.
+
+[v24 Paket 1 - 2026-06-29]
+- Mobil API fatura zinciri için güçlendirildi.
+- Sipariş/irsaliye/fatura durum akışı standartlaştırıldı.
+- Zincir takip endpoint'i eklendi.
+- Dashboard bekleyen iş sayaçları eklendi.
+- Fatura oluşturma/güncelleme/iptal endpointleri tamamlandı.
+
+## V36 - Performans ve Kararlılık
+- Log rotasyonu eklendi.
+- Açılış yedeği günde bir kez olacak şekilde optimize edildi.
+- Mobil API SQLite bağlantı ve indeks ayarları iyileştirildi.
+- Başarısız login denemeleri bellek temizliği eklendi.
+- Tekrarlanan indeks tanımı temizlendi.
+
+
+V37 - Güvenlik ve Kararlılık
+- Mobil API request validation limitleri eklendi.
+- Dinamik SQL identifier doğrulaması eklendi.
+- Servis token karşılaştırması compare_digest ile güçlendirildi.
+- Yedekten geri yükleme atomik ve doğrulamalı hale getirildi.
+- API sürüm/paket bilgisi güncellendi.
+
+
+V37.2 - Stok kayıt hotfix
+- Ürün alış/stok kayıt ekranında db_baglan import eksikliği giderildi.
+- Stok kaydetme ve manuel stok düzeltme işlemlerinin beklenmeyen hata vermesi engellendi.
+
+V45 - SQL Motoru ve İndeks Optimizasyonu
+- Güvenli tablo/kolon kontrolü yapan SQL performans yardımcıları eklendi.
+- Cari, hareket, satış, stok, tahsilat ve kasa ekranları için ek indeks seti eklendi.
+- SQLite PRAGMA optimize / analysis_limit hafif bakım akışı eklendi.
+- tools/sql_performance_check.py eklendi.
+- release_check V45 SQL performans kontrolüyle güncellendi.
+
+
+V46 - Hata Yakalama ve Log Kalitesi
+- Hata takip kodu eklendi.
+- JSONL hata logu eklendi.
+- Hassas veri maskeleme kontrolleri güçlendirildi.
+- V46 hata/log kontrol aracı eklendi.
+
+
+V47 - Büyük Veri ve Profil Kontrolü
+- Güvenli büyük veri performans testi eklendi.
+- Runtime/import profil kontrol aracı eklendi.
+- Gerçek veritabanını değiştirmeyen test kopyası yaklaşımı kullanıldı.

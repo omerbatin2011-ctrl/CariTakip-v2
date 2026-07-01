@@ -1,0 +1,13 @@
+V34 Toplu Temizlik
+
+Yapilanlar:
+- Python cache dosyalari ve gecici dosyalar temizlendi.
+- Log txt dosyalari paketten cikarildi; logs klasoru .gitkeep ile korundu.
+- Eski MODULER_DONUSUM_NOTLARI_V*.txt arsiv notlari paketten cikarildi.
+- Release paketinde gerekmeyen performans/demo veri scriptleri cikarildi.
+- requirements.txt genisletildi.
+- .gitignore, .ruff.toml ve pyproject.toml duzenlendi.
+- KALITE_KONTROL.bat eklendi.
+- yedekler klasorune dokunulmadi.
+
+Geri donus: Bir sorun olursa V33 fix1 paketine geri donulebilir.

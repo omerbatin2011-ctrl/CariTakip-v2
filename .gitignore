@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+
+# Build / packaging
+build/
+dist/
+*.spec.bak
+
+# Logs / temp
+logs/*.txt
+*.log
+*.tmp
+charts_dir.tmp
+
+# Local databases / backups
+# cari_takip.db is kept in this package intentionally.
+# yedekler/ is kept because local/manual mail backup workflow uses it.
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

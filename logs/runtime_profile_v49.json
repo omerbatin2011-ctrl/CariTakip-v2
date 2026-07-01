@@ -1,0 +1,76 @@
+{
+  "total_import_ms": 757.94,
+  "slow_modules": [],
+  "metrics": [
+    {
+      "module": "core.config",
+      "ok": true,
+      "elapsed_ms": 3.62,
+      "memory_kb": 162.46,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.db",
+      "ok": true,
+      "elapsed_ms": 10.76,
+      "memory_kb": 299.84,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.sql_performance",
+      "ok": true,
+      "elapsed_ms": 0.73,
+      "memory_kb": 136.5,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.loglama",
+      "ok": true,
+      "elapsed_ms": 39.57,
+      "memory_kb": 595.67,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.runtime_health",
+      "ok": true,
+      "elapsed_ms": 26.64,
+      "memory_kb": 701.73,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.stok_ui",
+      "ok": true,
+      "elapsed_ms": 484.57,
+      "memory_kb": 7091.74,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.cari_ui",
+      "ok": true,
+      "elapsed_ms": 8.6,
+      "memory_kb": 283.86,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.urun_stok_islemler",
+      "ok": true,
+      "elapsed_ms": 138.8,
+      "memory_kb": 4070.65,
+      "detail": "OK"
+    },
+    {
+      "module": "moduller.dashboard_logic",
+      "ok": true,
+      "elapsed_ms": 3.02,
+      "memory_kb": 244.5,
+      "detail": "OK"
+    },
+    {
+      "module": "core.bootstrap",
+      "ok": true,
+      "elapsed_ms": 41.63,
+      "memory_kb": 1644.14,
+      "detail": "OK"
+    }
+  ]
+}

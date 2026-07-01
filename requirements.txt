@@ -1,0 +1,15 @@
+# DAL ERP / CariTakip runtime dependencies
+PySide6>=6.8
+cryptography>=42.0
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.0
+matplotlib>=3.8
+openpyxl>=3.1
+reportlab>=4.0
+
+# Development / cleanup tools
+ruff>=0.15
+black>=26.0
+isort>=8.0
+autoflake>=2.3

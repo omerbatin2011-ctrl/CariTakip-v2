@@ -1,0 +1,22 @@
+DAL ERP v106 Temizlik Raporu
+
+Çıkarılanlar:
+1) __pycache__ klasörleri ve .pyc dosyaları
+2) Eski sürüm notları / rapor txt dosyaları
+3) Eski v78/v80 spec ve setup dosyaları
+4) Log dosyalarının içeriği
+5) Oluşturulmuş PDF çıktıları
+6) Eski yedek veritabanları
+7) Kullanılmayan boş mimari klasörler: repositories, services, ui
+8) Ana programda import edilmeyen modüller: personel_ui.py, sifre_sifirlama_mail.py, tablo_menuleri.py
+
+Tutulanlar:
+- main.py
+- cari_takip.db
+- core/
+- moduller/ içindeki aktif import edilen modüller
+- logo.png
+- requirements.txt
+- build_exe.bat ve build_setup.bat
+- main.spec ve DAL_ERP_Setup.iss
+- CALISTIRMA_KOMUTLARI.txt, CHANGELOG.txt, VERSIYON.txt

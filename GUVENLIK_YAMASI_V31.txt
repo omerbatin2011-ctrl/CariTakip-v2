@@ -1,0 +1,43 @@
+DAL ERP - v31 Kritik Güvenlik Düzeltmesi
+
+Bu paket v30 üzerine kritik güvenlik düzeltmeleri içerir.
+
+Yapılanlar:
+1) /login içindeki hardcoded admin/1234 tamamen kaldırıldı.
+   - Artık giriş sadece veritabanındaki kullanıcı bilgileriyle yapılır.
+   - Login endpoint'i ADMIN_TOKEN döndürmez.
+
+2) security.py içindeki sabit admin-token kabulü kaldırıldı.
+   - Token yalnızca login() tarafından üretilen süreli oturum tokenı olabilir.
+
+3) CORS varsayılan olarak kapatıldı.
+   - localhost regex izni kaldırıldı.
+   - Tarayıcı testi gerekiyorsa DAL_ERP_ALLOWED_ORIGINS açıkça tanımlanmalıdır.
+   - Mobil/Windows Flutter uygulamaları için CORS genelde gerekmez.
+
+4) Environment variable dokümantasyonu eklendi.
+   - .env.example dosyasına bakın.
+
+Önerilen production ayarları:
+
+Windows CMD:
+set DAL_ERP_ENV=production
+set DAL_ERP_ALLOWED_ORIGINS=https://erp.firmaniz.com
+set DAL_ERP_API_TOKEN_TTL=43200
+python -m api.server
+
+PowerShell:
+$env:DAL_ERP_ENV="production"
+$env:DAL_ERP_ALLOWED_ORIGINS="https://erp.firmaniz.com"
+$env:DAL_ERP_API_TOKEN_TTL="43200"
+python -m api.server
+
+Yerel geliştirme / Chrome test gerekiyorsa:
+set DAL_ERP_ENV=development
+set DAL_ERP_ALLOWED_ORIGINS=http://localhost:5000,http://127.0.0.1:5000
+python -m api.server
+
+Önemli:
+- API internete açılacaksa mutlaka HTTPS/reverse proxy arkasında çalıştırın.
+- Veritabanındaki kullanıcı şifrelerinin hash'li olduğundan emin olun.
+- Eski admin/1234 test hesabı varsa masaüstü uygulama içinden değiştirin veya silin.

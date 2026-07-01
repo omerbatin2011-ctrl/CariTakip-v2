@@ -1,0 +1,42 @@
+[
+  {
+    "name": "python_syntax",
+    "ok": true,
+    "message": "Tüm Python dosyaları okunabilir"
+  },
+  {
+    "name": "dependencies",
+    "ok": true,
+    "message": "Zorunlu paketler yüklü"
+  },
+  {
+    "name": "critical_imports",
+    "ok": true,
+    "message": "Kritik modüller import edilebilir"
+  },
+  {
+    "name": "writable_dirs",
+    "ok": true,
+    "message": "Gerekli klasörler yazılabilir"
+  },
+  {
+    "name": "sqlite",
+    "ok": true,
+    "message": "quick=ok, integrity=ok"
+  },
+  {
+    "name": "sqlite_perf",
+    "ok": true,
+    "message": "indeks=80->80, v45_set=15"
+  },
+  {
+    "name": "error_logging",
+    "ok": true,
+    "message": "JSON hata logu ve maskeleme aktif"
+  },
+  {
+    "name": "logs",
+    "ok": true,
+    "message": "Log boyutları normal"
+  }
+]

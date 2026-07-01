@@ -1,0 +1,28 @@
+V147 PERFORMANS DÜZELTME
+
+Sorun:
+- Program açılışında tüm modüller aynı anda oluşturulduğu için açılış yavaşlıyordu.
+- Dashboard açılışta ağır özet sorgularını senkron çalıştırıyordu.
+- Menü geçişlerinde tema ve sayfa yenilemeleri gereğinden sık tekrar ediyordu.
+
+Yapılanlar:
+1) Lazy sayfa yükleme eklendi.
+   - Açılışta sadece dashboard oluşturulur.
+   - Diğer menüler ilk tıklamada oluşturulur, sonra cache'ten kullanılır.
+
+2) Dashboard verileri gecikmeli yüklenecek hale getirildi.
+   - Ana pencere daha hızlı görünür.
+   - Ağır özetler pencere açıldıktan kısa süre sonra yüklenir.
+
+3) Menü geçişleri hafifletildi.
+   - Aynı sayfaya kısa sürede tekrar dönüldüğünde gereksiz yenileme yapılmaz.
+   - Tema bütün uygulamaya her geçişte yeniden uygulanmaz.
+
+4) Dashboard kâr hesabındaki ağır alt sorgu kaldırıldı.
+   - Dashboard hızlı kalır.
+   - Detaylı kâr hesabı rapor ekranlarına bırakıldı.
+
+Beklenen sonuç:
+- Açılış belirgin hızlanır.
+- Menü geçişleri daha akıcı olur.
+- İlk kez açılan sayfa bir kere hazırlanır; sonraki geçişler daha hızlıdır.

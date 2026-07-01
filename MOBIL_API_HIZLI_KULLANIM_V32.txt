@@ -1,0 +1,32 @@
+DAL ERP v32 - MOBİL API HIZLI KULLANIM
+======================================
+
+Gerçek proje yolu:
+C:\Users\technopc\OneDrive\Masaüstü\proje1\CariTakip
+
+1) Klasöre gir:
+cd /d "C:\Users\technopc\OneDrive\Masaüstü\proje1\CariTakip"
+
+2) Admin şifresini ayarla:
+Admin_Sifre_Ayarla.bat
+
+3) API'yi başlat:
+Canli_API_Baslat.bat
+
+4) Test et:
+API_Smoke_Test.bat
+
+5) API sağlık kontrolü:
+curl http://127.0.0.1:8000/health
+
+6) Aynı Wi-Fi telefon için:
+API penceresinde /health çıktısındaki local_ip değerini veya ipconfig ile IPv4 adresini kullan.
+Mobil API adresi örneği:
+http://192.168.1.25:8000
+
+7) Flutter klasörü:
+cd /d "C:\Users\technopc\OneDrive\Masaüstü\proje1\dal_erp_mobile_v1"
+flutter pub get
+flutter run -d chrome
+
+Windows masaüstü için Visual Studio Community + Desktop development with C++ gerekir.

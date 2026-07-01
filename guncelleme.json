@@ -1,0 +1,10 @@
+{
+  "son_surum": "v1.1.0",
+  "notlar": [
+    "Güvenli SQLite backup API",
+    "PDF/CSV rapor altyapısı",
+    "Offline lisans ve güncelleme altyapısı",
+    "300 cari / 1000 ürün performans testi"
+  ],
+  "paket": "offline_guncelleme_klasoru"
+}

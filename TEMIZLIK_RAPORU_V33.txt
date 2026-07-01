@@ -1,0 +1,18 @@
+CariTakip V33 Temizlik Raporu
+=============================
+
+Yapılanlar:
+- Proje köküne .ruff.toml eklendi.
+- __init__.py dosyaları F401 kontrolünden hariç tutuldu; paket dışa aktarımları korunur.
+- Python dosyalarında kullanılmayan importlar temizlendi.
+- yedekler klasörüne dokunulmadı.
+- logs klasörüne dokunulmadı.
+- Kod sözdizimi compileall ile kontrol edildi: başarılı.
+
+Temizlik özeti:
+- Değiştirilen Python dosyası: 28
+- Silinen kullanılmayan import: 520
+
+Not:
+- Bu paket import temizliği odaklıdır.
+- Sonraki aşamada güvenlik, performans ve ölü kod temizliği yapılabilir.

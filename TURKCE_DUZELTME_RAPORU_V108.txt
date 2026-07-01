@@ -1,0 +1,8 @@
+v108 Türkçe Düzeltme Raporu
+
+- Dashboard üzerindeki eksik Türkçe karakterler düzeltildi.
+- Satı/Satılar/Grafii/rün/zeti gibi bozuk arayüz metinleri standart Türkçe karşılıklarına çevrildi.
+- Barkotlu ifadesi Barkodlu olarak düzeltildi.
+- Kasa özetindeki yinelenen Kart Tahsilat kartı kaldırıldı.
+- Pencere başlığı ve sürüm bilgisi v108 olarak güncellendi.
+- Dosyalar UTF-8 olarak kaydedildi ve Python sözdizimi kontrolünden geçirildi.

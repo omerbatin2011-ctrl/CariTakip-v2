@@ -1,0 +1,58 @@
+DAL ERP v32 - CANLIYA HAZIRLIK TOPLU PAKET
+==========================================
+
+Bu sürümün hedefi küçük özellik eklemek değil, mevcut ERP + Mobil API + Mobil uygulama yapısını 3 gün içinde kullanılabilir canlı sürüme yaklaştırmaktır.
+
+ÖNE ÇIKAN DEĞİŞİKLİKLER
+-----------------------
+1) API güvenliği
+   - Hardcoded admin/1234 girişi yoktur.
+   - Login sadece veritabanındaki kullanıcılardan yapılır.
+   - admin-token varsayılan olarak kabul edilmez.
+   - Servis token ancak DAL_ERP_ALLOW_SERVICE_TOKEN=1 ve DAL_ERP_ADMIN_TOKEN doluysa çalışır.
+   - Production modunda /docs, /redoc ve /openapi.json kapalıdır.
+   - CORS varsayılan olarak kapalıdır.
+
+2) Login koruması
+   - Başarısız giriş denemeleri IP + kullanıcı adı bazında sınırlanır.
+   - Varsayılan: 5 hatalı denemeden sonra 15 dakika blok.
+   - Ayarlar: DAL_ERP_LOGIN_MAX_ATTEMPTS, DAL_ERP_LOGIN_BLOCK_SECONDS
+
+3) Canlı kontrol
+   - /canli/kontrol endpoint'i eklendi.
+   - Token gerektirir.
+   - Firma, tablo sayıları, ortam, local IP ve servis token durumunu döndürür.
+
+4) Audit log
+   - api_audit_log tablosu eklendi.
+   - API başlangıcı, başarılı giriş ve başarısız girişler hassas bilgi yazmadan kayıt altına alınır.
+
+5) .env desteği
+   - CariTakip\.env dosyası varsa API otomatik okur.
+   - python-dotenv bağımlılığı gerekmez.
+   - Örnek ayarlar .env.example dosyasındadır.
+
+6) Kullanım araçları
+   - Admin_Sifre_Ayarla.bat
+   - Canli_API_Baslat.bat
+   - Gelistirme_API_Baslat.bat
+   - API_Smoke_Test.bat
+   - Sifreli_Yedek_Olustur.bat
+
+İLK ÇALIŞTIRMA SIRASI
+---------------------
+1) Admin şifresi belirle:
+   Admin_Sifre_Ayarla.bat
+
+2) API'yi canlı modda başlat:
+   Canli_API_Baslat.bat
+
+3) Ayrı CMD penceresinde API testi yap:
+   API_Smoke_Test.bat
+
+4) Mobil uygulamada API adresini PC IP adresine göre ayarla.
+   Örnek: http://192.168.1.25:8000
+
+NOT
+---
+Bu paket internet ortamına doğrudan açılacaksa mutlaka HTTPS/reverse proxy, güçlü parola, düzenli yedek ve firewall kuralı kullanılmalıdır.

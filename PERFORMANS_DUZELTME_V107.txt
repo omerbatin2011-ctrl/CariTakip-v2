@@ -1,0 +1,13 @@
+V107 Performans Düzeltmesi
+
+- Satış ekranında cari/ürün arama yazdıkça her harfte sorgu çalışması engellendi.
+- 220 ms beklemeli QTimer arama eklendi.
+- Ürün ekleme sırasında ürün listesinin gereksiz sık yenilenmesi azaltıldı.
+- Veritabanına güvenli performans indeksleri eklendi.
+- test_verisi_olustur.py dosyası eklendi.
+  Bu dosya hem demo veri üretir hem de indeksleri kurar.
+
+Çalıştırma:
+cd /d "C:\Users\technopc\OneDrive\Masaüstü\CariTakip"
+python test_verisi_olustur.py
+python main.py

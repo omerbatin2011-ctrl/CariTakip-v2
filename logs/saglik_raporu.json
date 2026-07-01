@@ -1,0 +1,56 @@
+{
+  "python": "3.14.6",
+  "base_dir": "C:\\Users\\dalel\\OneDrive\\Masaüstü\\CariTakip",
+  "sonuclar": [
+    {
+      "ad": "klasor:logs",
+      "basarili": true,
+      "mesaj": "OK"
+    },
+    {
+      "ad": "klasor:yedekler",
+      "basarili": true,
+      "mesaj": "OK"
+    },
+    {
+      "ad": "klasor:reports",
+      "basarili": true,
+      "mesaj": "OK"
+    },
+    {
+      "ad": "disk",
+      "basarili": true,
+      "mesaj": "Boş alan: 107424 MB"
+    },
+    {
+      "ad": "bagimlilik:PySide6",
+      "basarili": true,
+      "mesaj": "yüklü"
+    },
+    {
+      "ad": "bagimlilik:cryptography",
+      "basarili": true,
+      "mesaj": "yüklü"
+    },
+    {
+      "ad": "bagimlilik:matplotlib",
+      "basarili": true,
+      "mesaj": "yüklü"
+    },
+    {
+      "ad": "bagimlilik:openpyxl",
+      "basarili": true,
+      "mesaj": "yüklü"
+    },
+    {
+      "ad": "bagimlilik:reportlab",
+      "basarili": true,
+      "mesaj": "yüklü"
+    },
+    {
+      "ad": "veritabani",
+      "basarili": true,
+      "mesaj": "ok"
+    }
+  ]
+}

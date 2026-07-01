@@ -1,0 +1,22 @@
+DAL ERP Next Professional Revamp V152
+
+Bu paket tek sürümde yapılan toplu revizyondur.
+
+Yapılanlar:
+- Login ekranı daha kurumsal hale getirildi.
+- Sol panelde DAL ERP NEXT / Professional Edition düzeni eklendi.
+- Güvenlik metinleri kart görünümüne alındı.
+- Şifremi Unuttum butonu link görünümüne yaklaştırıldı.
+- Login ekranındaki seri numarası kalabalığı kaldırıldı.
+- Sol menüdeki gereksiz hamburger buton kaldırıldı.
+- Sidebar logo/başlık hizası sadeleştirildi.
+- Ana pencere başlığı V152 olarak güncellendi.
+- Menü geçişlerinde tekrar veri çekme eşiği 15 saniyeye çıkarıldı.
+- Başlangıç indeks/migrasyon işleri daha geç çalışacak şekilde ertelendi.
+- Dashboard grafik yükleme daha geç başlatıldı.
+- Cari ve stok listelerinde ilk yükleme sınırı 120 kayda çekildi.
+- Büyük tablolar için mevcut lazy/cache yapı korundu.
+
+Çalıştırma:
+cd /d "C:\Users\technopc\OneDrive\Masaüstü\CariTakip"
+py main.py

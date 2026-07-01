@@ -1,0 +1,54 @@
+{
+  "db_copy": "C:\\Users\\dalel\\AppData\\Local\\Temp\\caritakip_v47_perf_r40_z7gz\\cari_takip_perf.db",
+  "db_size_mb": 0.49,
+  "settings": {
+    "quick": true,
+    "cariler": 1000,
+    "urunler": 1000,
+    "hareketler": 5000
+  },
+  "metrics": [
+    {
+      "name": "seed_cariler",
+      "ok": true,
+      "elapsed_ms": 8.59,
+      "detail": "1000 cari eklendi"
+    },
+    {
+      "name": "seed_urunler",
+      "ok": true,
+      "elapsed_ms": 10.36,
+      "detail": "1000 ürün eklendi"
+    },
+    {
+      "name": "seed_hareketler",
+      "ok": true,
+      "elapsed_ms": 58.7,
+      "detail": "5000 hareket eklendi"
+    },
+    {
+      "name": "cari_arama_like",
+      "ok": true,
+      "elapsed_ms": 0.15,
+      "detail": "ortalama=3 tekrar, satır=0"
+    },
+    {
+      "name": "urun_arama_like",
+      "ok": true,
+      "elapsed_ms": 0.13,
+      "detail": "ortalama=3 tekrar, satır=0"
+    },
+    {
+      "name": "hareket_cari_ozet",
+      "ok": true,
+      "elapsed_ms": 1.63,
+      "detail": "ortalama=3 tekrar, satır=500"
+    },
+    {
+      "name": "dashboard_toplamlar",
+      "ok": true,
+      "elapsed_ms": 1.01,
+      "detail": "ortalama=3 tekrar, satır=4"
+    }
+  ]
+}

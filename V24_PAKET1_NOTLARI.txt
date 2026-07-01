@@ -1,0 +1,25 @@
+DAL ERP Mobile v24 - Paket 1
+
+Eklenen/güçlendirilenler:
+- API sürümü 2.4.1-paket1 yapıldı.
+- Sipariş -> İrsaliye -> Fatura zinciri güçlendirildi.
+- /siparisler/{siparis_id}/zincir eklendi.
+- /siparisler/{siparis_id}/irsaliye kısa yolu eklendi.
+- /irsaliyeler/{irsaliye_id}/fatura kısa yolu eklendi.
+- Doğrudan fatura oluşturma için POST /faturalar eklendi.
+- Fatura durum güncelleme: PUT /faturalar/{fatura_id}/durum eklendi.
+- Fatura iptal: DELETE /faturalar/{fatura_id} eklendi.
+- Dashboard'a bekleyen sipariş, irsaliye ve fatura sayaçları eklendi.
+- Eski veritabanlarında eksik kolonlar için migration güçlendirildi.
+- Ürün listeleme sorgusundaki varsayilan_fiyat uyumluluk riski giderildi.
+
+Durum akışı:
+Sipariş: Bekliyor, Onaylandı, İrsaliye Kesildi, Faturalandı, Teslim Edildi, Kapandı, İptal
+İrsaliye: Hazırlandı, Sevk Edildi, Faturalandı, Teslim Edildi, İptal
+Fatura: Kesildi, Tahsilat Bekliyor, Kısmi Tahsilat, Tahsil Edildi, İptal
+
+Çalıştırma:
+1) CMD aç
+2) cd /d proje_klasoru\CariTakip
+3) python -m api.server
+4) Başka CMD'de API_TEST_V24_PAKET1.bat çalıştır

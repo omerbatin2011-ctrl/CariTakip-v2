@@ -1,0 +1,33 @@
+CariTakip V37 - Güvenlik ve Kararlılık
+
+Yapılan başlıca değişiklikler:
+
+1) Mobil API giriş verileri sınırlandırıldı
+- Kullanıcı adı, şifre, not, açıklama, firma bilgisi ve kalem listeleri için makul uzunluk limitleri eklendi.
+- Sipariş/fatura kalemlerinde negatif adet, negatif fiyat, aşırı iskonto/KDV gibi riskli değerler engellendi.
+- Liste endpointlerinde limit üst sınırı 500 olarak sabitlendi.
+
+2) API SQL güvenliği sertleştirildi
+- Dinamik tablo/kolon adları için güvenli SQL tanımlayıcı kontrolü eklendi.
+- Servis token karşılaştırması sabit zamanlı compare_digest ile yapıldı.
+- Canlı kontrol endpointindeki tablo sayımı whitelist + identifier doğrulamasıyla çalışır hale getirildi.
+
+3) Logo/path girişi sertleştirildi
+- API üzerinden mutlak yol veya üst klasöre çıkış içeren logo_path değeri reddedilir.
+- Böylece path traversal benzeri riskler azaltıldı.
+
+4) Veritabanı geri yükleme daha güvenli hale getirildi
+- Seçilen yedek dosyası önce geçici dosyaya kopyalanır.
+- Geçici dosya doğrulanır.
+- Sonra ana veritabanı atomik os.replace ile değiştirilir.
+- Kopyalama yarıda kalırsa mevcut DB korunur.
+- Mevcut DB dosyasının kendisinin geri yükleme kaynağı seçilmesi engellendi.
+
+5) Sürüm bilgisi güncellendi
+- Mobil API version değeri v37 güvenlik/kararlılık seviyesine çekildi.
+- /canli/kontrol paket bilgisi güncellendi.
+
+Not:
+- yedekler klasörüne dokunulmadı.
+- logs klasörü çalışma anında oluşacak şekilde korunur.
+- Python sözdizimi kontrolü başarılıdır.

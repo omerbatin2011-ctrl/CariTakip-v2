@@ -1,0 +1,2 @@
+cd /d "C:\Users\technopc\OneDrive\Masaüstü\CariTakip"
+python main.py

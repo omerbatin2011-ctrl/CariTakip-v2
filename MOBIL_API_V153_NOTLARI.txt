@@ -1,0 +1,15 @@
+V153 Mobil API Altyapısı
+
+Eklenenler:
+- api/server.py: FastAPI tabanlı mobil REST API.
+- api/security.py: Token tabanlı giriş altyapısı.
+- api/launcher.py: Masaüstü program açılınca API'yi arka planda başlatır.
+- /login, /dashboard, /cariler, /cariler/{id}, /hareketler, /tahsilat, /stoklar endpointleri.
+- Mobil_API_Kurulum.bat: Gerekli paketleri kurar.
+- Mobil_API_Baslat.bat: API'yi manuel başlatır.
+- Mobil_API_Test.bat: API dokümantasyonunu açar.
+- docs/MOBIL_API_REHBERI.md: Telefon bağlantı rehberi.
+
+Not:
+- İlk hedef aynı Wi-Fi kullanımıdır.
+- İnternetten erişim için ayrıca HTTPS/VPN/port güvenliği önerilir.

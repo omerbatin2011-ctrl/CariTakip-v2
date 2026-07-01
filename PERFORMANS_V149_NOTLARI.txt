@@ -1,0 +1,16 @@
+V149 Performans Mega Revizyon
+
+Yapılanlar:
+- Açılışta ağır indeks/migrasyon işleri pencere açıldıktan sonraya alındı.
+- Menü geçişlerinde lazy page/cache yapısı korundu ve gereksiz dashboard grafik çizimi geciktirildi.
+- Dashboard satış grafiği UI kilitlemeden gecikmeli çizilecek şekilde düzenlendi.
+- Cari arama ve stok arama debounce edildi; her harfte ağır sorgu çalışması engellendi.
+- Cari listesi büyük veride ilk 300 kayıtla hızlı açılacak şekilde sınırlandı.
+- Stok listesi büyük veride ilk 300 kayıtla hızlı açılacak şekilde sınırlandı.
+- Stok fatura filtresi SQL seviyesine taşındı; Python tarafında tüm listeyi süzme azaltıldı.
+- QTableWidget doldurma sırasında repaint/sorting kapatılıp toplu doldurma hızlandırıldı.
+- SQLite için ek kritik indeksler ve PRAGMA optimize eklendi.
+
+Not:
+- Arama yapıldığında ilgili ilk 300 sonuç gösterilir.
+- Toplam kayıt/gösterilen kayıt bilgisi liste başlığında görünür.

@@ -1,0 +1,33 @@
+DAL ERP v32 - CANLI KONTROL LİSTESİ
+===================================
+
+[ ] 1. Admin şifresi güçlü ve güncel mi?
+    Komut: Admin_Sifre_Ayarla.bat
+
+[ ] 2. API production modda mı çalışıyor?
+    Komut: Canli_API_Baslat.bat
+    Beklenen: /docs kapalı, /health açık.
+
+[ ] 3. API smoke test geçti mi?
+    Komut: API_Smoke_Test.bat
+    Beklenen: Login OK, /canli/kontrol OK, /dashboard OK.
+
+[ ] 4. Firma ayarları doğru mu?
+    Kontrol: /firma veya mobil Firma Ayarları ekranı.
+
+[ ] 5. Mobil uygulama API adresi doğru mu?
+    Telefon aynı Wi-Fi'de ise 127.0.0.1 değil PC IP yazılmalı.
+
+[ ] 6. Temel akış test edildi mi?
+    Cari -> Stok -> Sipariş -> İrsaliye -> Fatura -> PDF/Rapor.
+
+[ ] 7. Yedek alındı mı?
+    Komut: Sifreli_Yedek_Olustur.bat
+
+[ ] 8. Loglarda şifre/token/IBAN gibi hassas bilgi var mı?
+    Kontrol: logs klasörü.
+
+[ ] 9. CORS gereksiz açık mı?
+    Canlı modda DAL_ERP_ALLOWED_ORIGINS boş olmalı veya sadece güvenilir domainler yazılmalı.
+
+[ ] 10. İnternete açılacaksa HTTPS, firewall ve reverse proxy hazır mı?

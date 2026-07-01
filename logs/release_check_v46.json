@@ -1,0 +1,42 @@
+[
+  {
+    "name": "python_syntax",
+    "ok": true,
+    "message": "Tüm Python dosyaları okunabilir"
+  },
+  {
+    "name": "dependencies",
+    "ok": false,
+    "message": "Eksik paketler: PySide6"
+  },
+  {
+    "name": "critical_imports",
+    "ok": false,
+    "message": "core.bootstrap: ModuleNotFoundError: No module named 'PySide6' | moduller.stok_ui: ModuleNotFoundError: No module named 'PySide6' | moduller.urun_stok_islemler: ModuleNotFoundError: No module named 'PySide6' | moduller.cari_ui: ModuleNotFoundError: No module named 'PySide6'"
+  },
+  {
+    "name": "writable_dirs",
+    "ok": true,
+    "message": "Gerekli klasörler yazılabilir"
+  },
+  {
+    "name": "sqlite",
+    "ok": true,
+    "message": "quick=ok, integrity=ok"
+  },
+  {
+    "name": "sqlite_perf",
+    "ok": true,
+    "message": "indeks=79->79, v45_set=15"
+  },
+  {
+    "name": "error_logging",
+    "ok": true,
+    "message": "JSON hata logu ve maskeleme aktif"
+  },
+  {
+    "name": "logs",
+    "ok": true,
+    "message": "Log boyutları normal"
+  }
+]

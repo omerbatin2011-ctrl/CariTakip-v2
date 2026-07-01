@@ -1,0 +1,35 @@
+DAL ERP v106_moduler
+
+Bu sürümde yapılanlar:
+
+1) main.py sadeleştirildi
+   - Uygulama başlangıcı, veritabanı hazırlığı ve QApplication akışı main.py içinde bırakıldı.
+   - Ana pencere kodu main.py içinden ayrıldı.
+   - Giriş ekranı main.py içinden ayrıldı.
+
+2) Yeni modüller
+   - moduller/ana_pencere.py
+     AnaPencere sınıfı ve ana uygulama iskeleti bu dosyaya taşındı.
+
+   - moduller/giris_ui.py
+     Güvenli giriş ekranı ve şifre sıfırlama akışı bu dosyaya taşındı.
+
+3) Mevcut modüller korunmuştur
+   - dashboard_ui.py
+   - dashboard_logic.py
+   - cari_ui.py
+   - stok_ui.py
+   - satis_ui.py
+   - kasa_ui.py
+   - tahsilat_ui.py
+   - raporlar_ui.py
+   - ayarlar_ui.py
+   - yedekleme_ui.py
+   - teklif_ui.py
+
+4) Kontrol
+   - Tüm Python dosyaları compileall ile sözdizimi kontrolünden geçirildi.
+
+Çalıştırma:
+cd /d "C:\Users\technopc\OneDrive\Masaüstü\CariTakip"
+py main.py

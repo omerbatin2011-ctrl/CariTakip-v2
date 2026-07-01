@@ -1,0 +1,26 @@
+DAL ERP Mobil API - V30 Guvenlik Yamasi
+
+Yapilanlar:
+1) API CORS ayari daraltildi.
+   - Artik varsayilan olarak * kullanilmiyor.
+   - DAL_ERP_ALLOWED_ORIGINS ile izinli origin listesi verilebilir.
+   - Ornek: set DAL_ERP_ALLOWED_ORIGINS=http://localhost:53721,http://127.0.0.1:53721
+
+2) local_ip() fonksiyonu server.py icine eklendi.
+   - /health ve / endpointleri yerel IP bilgisini gosterir.
+   - launcher.py artik local_ip import hatasi vermez.
+
+3) Production modunda Swagger / docs kapatildi.
+   - set DAL_ERP_ENV=production yapilirsa /docs, /redoc ve /openapi.json kapanir.
+   - Production modunda DAL_ERP_ADMIN_TOKEN zorunlu hale getirildi.
+
+4) Sifreli yedek olusturma araci eklendi.
+   - Dosya: Sifreli_Yedek_Olustur.bat
+   - Gerekli paket: pip install cryptography
+   - Cikti: yedekler/encrypted_YYYY-MM-DD_HHMMSS.dalbackup
+
+5) Log maskeleme eklendi.
+   - token, Authorization Bearer, sifre/password/parola ve IBAN benzeri alanlar loglara maskelenerek yazilir.
+
+Onemli not:
+Bu paket yerel Wi-Fi kullanimi icindir. API'yi internete dogrudan acmayin. Gerekirse VPN veya ters proxy + HTTPS + guclu kimlik dogrulama kullanin.

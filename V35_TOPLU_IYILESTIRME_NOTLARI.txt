@@ -1,0 +1,14 @@
+V35 TOPLU IYILESTIRME NOTLARI
+
+Yapilanlar:
+- Veritabani yeni kurulum guvenligi iyilestirildi.
+- hareketler tablosuna aktif kolonu CREATE TABLE seviyesinde eklendi.
+- Eski veritabanlari icin hareketler.aktif migrasyonu eklendi.
+- Bu duzeltme, idx_hareketler_aktif_* indekslerinin yeni kurulumda hata vermesini engeller.
+- BAGIMLILIKLARI_KUR.bat eklendi. Yeni format atilan bilgisayarda tek tikla/tek komutla requirements kurulumu icin.
+- Python soz dizimi kontrolu pakete uygulanmistir.
+
+Dokunulmayanlar:
+- yedekler klasoru korunmustur.
+- logs klasoru korunmus, log icerigi paketlenmemistir.
+- cari_takip.db korunmustur.

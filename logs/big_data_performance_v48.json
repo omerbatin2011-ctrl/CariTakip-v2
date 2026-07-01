@@ -1,0 +1,54 @@
+{
+  "db_copy": "/tmp/caritakip_v47_perf_m85nxzv6/cari_takip_perf.db",
+  "db_size_mb": 2.37,
+  "settings": {
+    "quick": true,
+    "cariler": 1000,
+    "urunler": 1000,
+    "hareketler": 5000
+  },
+  "metrics": [
+    {
+      "name": "seed_cariler",
+      "ok": true,
+      "elapsed_ms": 7.51,
+      "detail": "1000 cari eklendi"
+    },
+    {
+      "name": "seed_urunler",
+      "ok": true,
+      "elapsed_ms": 5.93,
+      "detail": "1000 ürün eklendi"
+    },
+    {
+      "name": "seed_hareketler",
+      "ok": true,
+      "elapsed_ms": 51.77,
+      "detail": "5000 hareket eklendi"
+    },
+    {
+      "name": "cari_arama_like",
+      "ok": true,
+      "elapsed_ms": 0.17,
+      "detail": "ortalama=3 tekrar, satır=0"
+    },
+    {
+      "name": "urun_arama_like",
+      "ok": true,
+      "elapsed_ms": 0.16,
+      "detail": "ortalama=3 tekrar, satır=0"
+    },
+    {
+      "name": "hareket_cari_ozet",
+      "ok": true,
+      "elapsed_ms": 1.48,
+      "detail": "ortalama=3 tekrar, satır=500"
+    },
+    {
+      "name": "dashboard_toplamlar",
+      "ok": true,
+      "elapsed_ms": 1.1,
+      "detail": "ortalama=3 tekrar, satır=4"
+    }
+  ]
+}

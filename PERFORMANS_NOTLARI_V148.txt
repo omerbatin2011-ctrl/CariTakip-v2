@@ -1,0 +1,4 @@
+
+V148 - Açılış Hatası Düzeltmesi
+- v147 lazy sayfa yapısındaki eksik QLabel importu düzeltildi.
+- Program açılışta “Beklenmeyen Hata” vermeden ana ekrana geçecek şekilde paketlendi.
