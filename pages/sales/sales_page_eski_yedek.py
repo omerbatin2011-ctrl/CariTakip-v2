@@ -1,13 +1,17 @@
 import os
 import sys
+import urllib.parse
+import webbrowser
 from datetime import datetime
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut, QTextDocument
-from PySide6.QtPrintSupport import QPrinter
+from PySide6.QtPrintSupport import QPrintDialog, QPrinter
 from PySide6.QtWidgets import (
+    QApplication,
     QComboBox,
     QDialog,
+    QFileDialog,
     QFrame,
     QGridLayout,
     QHBoxLayout,
@@ -29,31 +33,6 @@ from PySide6.QtWidgets import (
 from moduller.db import baglan, db_baglan, urun_tablolari_olustur
 from moduller.sistem import firma_bilgisi_getir
 from moduller.yardimci import logo_html, para_yaz
-from pages.sales.sales_cart import (
-    barkod_oku_ve_ekle as cart_barkod_oku_ve_ekle,
-)
-from pages.sales.sales_cart import (
-    hesapla_toplam as cart_hesapla_toplam,
-)
-from pages.sales.sales_cart import (
-    liste_temizle as cart_liste_temizle,
-)
-from pages.sales.sales_cart import (
-    satir_sil as cart_satir_sil,
-)
-from pages.sales.sales_cart import (
-    urun_sec_ve_ekle as cart_urun_sec_ve_ekle,
-)
-from pages.sales.sales_document import (
-    belge_html as document_belge_html,
-    mail_ac as document_mail_ac,
-    ozet_kopyala as document_ozet_kopyala,
-    ozet_metni as document_ozet_metni,
-    pdf_kaydet as document_pdf_kaydet,
-    whatsapp_proforma_ac as document_whatsapp_proforma_ac,
-    yazdir as document_yazdir,
-)
-from pages.sales.sales_history import satis_gecmisi as history_satis_gecmisi
 from pages.sales.sales_product import (
     grup_duzenle,
     grup_ekle,
@@ -769,85 +748,449 @@ class SatisMixin:
             urun_sec_ve_ekle(urun["id"], urun["ad"], urun["fiyat"])
 
         def urun_sec_ve_ekle(urun_id, urun_ad, fiyat):
-            return cart_urun_sec_ve_ekle(
-                urun_id,
-                urun_ad,
-                fiyat,
-                durum=durum,
-                tablo_kalem=tabloKalem,
-                hesapla_toplam=hesapla_toplam,
-                urunleri_yukle=urunleri_yukle,
-            )
+            durum["urun_id"] = int(urun_id)
+            durum["urun_ad"] = urun_ad
+            durum["urun_fiyat"] = float(fiyat or 0)
+
+            # Aynı ürün varsa yeni satır açma, adeti 1 artır.
+            for r in range(tabloKalem.rowCount()):
+                mevcut = tabloKalem.item(r, 0).text() if tabloKalem.item(r, 0) else ""
+                grup = tabloKalem.item(r, 4).text() if tabloKalem.item(r, 4) else ""
+                mevcut_id = tabloKalem.item(r, 5).text() if tabloKalem.columnCount() > 5 and tabloKalem.item(r, 5) else ""
+                if (mevcut_id and mevcut_id == str(urun_id)) or (mevcut == urun_ad and grup == (durum["grup_ad"] or "")):
+                    adet = parse_sayi(tabloKalem.item(r, 1).text() if tabloKalem.item(r, 1) else "0")
+                    tabloKalem.setItem(r, 1, QTableWidgetItem(str(int(adet + 1) if float(adet + 1).is_integer() else adet + 1)))
+                    tabloKalem.selectRow(r)
+                    hesapla_toplam()
+                    urunleri_yukle()
+                    return
+
+            satir = tabloKalem.rowCount()
+            tabloKalem.insertRow(satir)
+            tabloKalem.setItem(satir, 0, QTableWidgetItem(urun_ad))
+            tabloKalem.setItem(satir, 1, QTableWidgetItem("1"))
+            tabloKalem.setItem(satir, 2, QTableWidgetItem(str(fiyat if fiyat else "")))
+            tabloKalem.setItem(satir, 3, QTableWidgetItem("0"))
+            tabloKalem.setItem(satir, 4, QTableWidgetItem(durum["grup_ad"] or ""))
+            tabloKalem.setItem(satir, 5, QTableWidgetItem(str(int(urun_id))))
+            tabloKalem.selectRow(satir)
+            hesapla_toplam()
+            urunleri_yukle()
 
         def barkod_oku_ve_ekle():
-            return cart_barkod_oku_ve_ekle(
-                pencere=pencere,
-                txt_barkod_oku=txtBarkodOku,
-                durum=durum,
-                urun_sec_ve_ekle_callback=urun_sec_ve_ekle,
-            )
+            barkod = txtBarkodOku.text().strip()
+            if not barkod:
+                return
+            try:
+                with baglan() as conn:
+                    cur = conn.cursor()
+                    cur.execute("""
+                        SELECT u.id, u.ad, COALESCE(u.varsayilan_fiyat,0),
+                               COALESCE(g.id,0), COALESCE(g.ad,'')
+                        FROM urunler u
+                        LEFT JOIN urun_gruplari g ON g.id = u.grup_id
+                        WHERE COALESCE(u.barkod,'')=?
+                        LIMIT 1
+                    """, (barkod,))
+                    row = cur.fetchone()
+            except Exception as hata:
+                QMessageBox.warning(pencere, "Barkod Hatası", f"Barkod okunamadı:\n{hata}")
+                return
+
+            if not row:
+                QMessageBox.warning(pencere, "Barkod Bulunamadı", f"Bu barkoda ait ürün bulunamadı:\n{barkod}")
+                txtBarkodOku.selectAll()
+                txtBarkodOku.setFocus()
+                return
+
+            urun_id, urun_ad, fiyat, grup_id, grup_ad = row
+            durum["grup_id"] = int(grup_id or 0) if grup_id else durum.get("grup_id")
+            durum["grup_ad"] = str(grup_ad or durum.get("grup_ad") or "")
+            urun_sec_ve_ekle(int(urun_id), str(urun_ad or ""), float(fiyat or 0))
+            txtBarkodOku.clear()
+            txtBarkodOku.setFocus()
 
         def hesapla_toplam():
-            return cart_hesapla_toplam(
-                tablo_kalem=tabloKalem,
-                lbl_toplam=lblToplam,
-                lbl_ara_toplam=lblAraToplam,
-                lbl_genel_toplam_kart=lblGenelToplamKart,
-                hesaplama_yapiliyor=hesaplama_yapiliyor,
-            )
+            if hesaplama_yapiliyor["aktif"]:
+                return 0.0
+            hesaplama_yapiliyor["aktif"] = True
+            toplam = 0.0
+            for r in range(tabloKalem.rowCount()):
+                try:
+                    adet = parse_sayi(tabloKalem.item(r, 1).text() if tabloKalem.item(r, 1) else "0")
+                    fiyat = parse_sayi(tabloKalem.item(r, 2).text() if tabloKalem.item(r, 2) else "0")
+                    tutar = adet * fiyat
+                except Exception:
+                    tutar = 0.0
+                toplam += tutar
+                item = QTableWidgetItem(para_yaz(tutar))
+                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                tabloKalem.setItem(r, 3, item)
+            lblToplam.setText(f"Genel Toplam\n{para_yaz(toplam)}")
+            lblAraToplam.setText(para_yaz(toplam))
+            lblGenelToplamKart.setText(para_yaz(toplam))
+            hesaplama_yapiliyor["aktif"] = False
+            return toplam
 
         def satir_sil():
-            return cart_satir_sil(tablo_kalem=tabloKalem, hesapla_toplam=hesapla_toplam)
+            row = tabloKalem.currentRow()
+            if row >= 0:
+                tabloKalem.removeRow(row)
+                hesapla_toplam()
 
         def liste_temizle():
-            return cart_liste_temizle(tablo_kalem=tabloKalem, hesapla_toplam=hesapla_toplam)
+            tabloKalem.setRowCount(0)
+            hesapla_toplam()
 
         def belge_html():
-            return document_belge_html(
-                tablo_kalem=tabloKalem,
-                txt_not=txtNot,
-                durum=durum,
-                belge_durumu=belge_durumu,
-            )
+            firma = firma_bilgisi_getir()
+            cari = durum.get("cari")
+            tarih = datetime.now().strftime("%d.%m.%Y %H:%M")
+            toplam = 0.0
+            satir_html = ""
+            for r in range(tabloKalem.rowCount()):
+                urun = tabloKalem.item(r, 0).text() if tabloKalem.item(r, 0) else ""
+                adet = parse_sayi(tabloKalem.item(r, 1).text() if tabloKalem.item(r, 1) else "0")
+                fiyat = parse_sayi(tabloKalem.item(r, 2).text() if tabloKalem.item(r, 2) else "0")
+                grup = tabloKalem.item(r, 4).text() if tabloKalem.item(r, 4) else ""
+                tutar = adet * fiyat
+                toplam += tutar
+                satir_html += f"""
+                <tr>
+                    <td>{urun}</td><td>{grup}</td><td style='text-align:right'>{adet:g}</td>
+                    <td style='text-align:right'>{para_yaz(fiyat)}</td><td style='text-align:right'>{para_yaz(tutar)}</td>
+                </tr>
+                """
+            notlar = txtNot.toPlainText().strip()
+            return f"""
+            <html><body style='font-family:Arial, sans-serif; font-size:10pt;'>
+            {logo_html(190)}
+            <h1 style='color:#1E293B;margin-bottom:4px;text-align:center;'>{firma.get('firma_adi','')}</h1>
+            <div style='text-align:center; line-height:1.45;'>
+                <b>Tel :</b> {firma.get('telefon','')} &nbsp
+                | &nbsp
+                <b>Vergi No / T.C. No :</b> {firma.get('vergi_no','')}
+            </div>
+            <div style='text-align:center; line-height:1.45;'>
+                <b>Adres :</b> {firma.get('adres','')} &nbsp
+                | &nbsp
+                <b>Vergi Dairesi :</b> {firma.get('vergi_dairesi','')}
+            </div>
+            <div style='text-align:center; line-height:1.45;'>
+                <b>E-Posta :</b> {firma.get('eposta','')}
+            </div>
+            <hr>
+            <h2 style='text-align:center;'>{belge_durumu.get('tur', 'PROFORMA')}</h2>
+            <table width='100%' style='margin-bottom:10px;'>
+                <tr><td><b>Tarih:</b> {tarih}</td><td style='text-align:right'><b>Cari:</b> {cari['ad'] if cari else '-'}</td></tr>
+                <tr><td><b>Vergi Dairesi:</b> {cari.get('vergi_dairesi', '-') if cari else '-'}</td><td style='text-align:right'><b>Vergi No:</b> {cari.get('vergi_no', '-') if cari else '-'}</td></tr>
+                <tr><td colspan='2'><b>Adres:</b> {cari.get('adres', '-') if cari else '-'}</td></tr>
+                <tr><td colspan='2'><b>Teklif Geçerlilik Süresi:</b> 15 Gün</td></tr>
+            </table>
+            <table width='100%' cellspacing='0' cellpadding='6' style='border-collapse:collapse;'>
+                <tr style='background:#0D47A1;color:white;'>
+                    <th align='left'>Ürün</th><th align='left'>Grup</th><th align='right'>Adet</th><th align='right'>Birim Fiyat</th><th align='right'>Tutar</th>
+                </tr>
+                {satir_html}
+                <tr><td colspan='4' style='text-align:right;border-top:1px solid #333;'><b>GENEL TOPLAM</b></td><td style='text-align:right;border-top:1px solid #333;'><b>{para_yaz(toplam)}</b></td></tr>
+            </table>
+            <p><b>Not:</b> {notlar if notlar else '-'}</p>
+            </body></html>
+            """
 
         def ozet_metni():
-            return document_ozet_metni(
-                tablo_kalem=tabloKalem,
-                txt_not=txtNot,
-                durum=durum,
-                belge_durumu=belge_durumu,
-            )
+            firma = firma_bilgisi_getir()
+            cari = durum.get("cari")
+            satirlar = [firma.get("firma_adi", ""), f"{belge_durumu.get('tur', 'PROFORMA')} ÖZETİ", f"Tarih: {datetime.now().strftime('%d.%m.%Y %H:%M')}"]
+            satirlar.append(f"Cari: {cari['ad'] if cari else '-'}")
+            if cari:
+                satirlar.append(f"Vergi Dairesi: {cari.get('vergi_dairesi', '-') or '-'}")
+                satirlar.append(f"Vergi No: {cari.get('vergi_no', '-') or '-'}")
+            satirlar.append("")
+            toplam = 0.0
+            for r in range(tabloKalem.rowCount()):
+                urun = tabloKalem.item(r, 0).text() if tabloKalem.item(r, 0) else ""
+                adet = parse_sayi(tabloKalem.item(r, 1).text() if tabloKalem.item(r, 1) else "0")
+                fiyat = parse_sayi(tabloKalem.item(r, 2).text() if tabloKalem.item(r, 2) else "0")
+                tutar = adet * fiyat
+                toplam += tutar
+                satirlar.append(f"- {urun}: {adet:g} x {para_yaz(fiyat)} = {para_yaz(tutar)}")
+            satirlar.append("")
+            satirlar.append(f"TOPLAM: {para_yaz(toplam)}")
+            notlar = txtNot.toPlainText().strip()
+            if notlar:
+                satirlar.append(f"Not: {notlar}")
+            return "\n".join(satirlar)
 
         def ozet_kopyala():
-            return document_ozet_kopyala(pencere=pencere, ozet_metni_func=ozet_metni)
+            QApplication.clipboard().setText(ozet_metni())
+            QMessageBox.information(pencere, "Kopyalandı", "Özet panoya kopyalandı.")
 
         def mail_ac():
-            return document_mail_ac(ozet_metni_func=ozet_metni, belge_durumu=belge_durumu)
+            konu = f"{belge_durumu.get('tur', 'PROFORMA')} Özeti"
+            body = ozet_metni()
+            url = "mailto:?subject=" + urllib.parse.quote(konu) + "&body=" + urllib.parse.quote(body)
+            webbrowser.open(url)
 
         def yazdir():
-            return document_yazdir(
-                pencere=pencere,
-                tablo_kalem=tabloKalem,
-                belge_html_func=belge_html,
-            )
+            if tabloKalem.rowCount() == 0:
+                QMessageBox.warning(pencere, "Uyarı", "Yazdırmak için önce ürün ekleyin.")
+                return
+            printer = QPrinter(QPrinter.HighResolution)
+            dialog = QPrintDialog(printer, pencere)
+            dialog.setWindowTitle("Satış / Proforma Yazdır")
+            if dialog.exec() != QDialog.Accepted:
+                return
+            doc = QTextDocument()
+            doc.setHtml(belge_html())
+            doc.print_(printer)
 
         def pdf_kaydet():
-            return document_pdf_kaydet(
-                pencere=pencere,
-                tablo_kalem=tabloKalem,
-                belge_html_func=belge_html,
-                belge_durumu=belge_durumu,
+            if tabloKalem.rowCount() == 0:
+                QMessageBox.warning(pencere, "Uyarı", "PDF için önce ürün ekleyin.")
+                return
+            dosya_yolu, _ = QFileDialog.getSaveFileName(
+                pencere,
+                "Satış / Proforma PDF Kaydet",
+                f"{belge_durumu.get('tur', 'Proforma').replace(' ', '_')}.pdf",
+                "PDF Dosyası (*.pdf)"
             )
+            if not dosya_yolu:
+                return
+            if not dosya_yolu.lower().endswith(".pdf"):
+                dosya_yolu += ".pdf"
+            printer = QPrinter(QPrinter.HighResolution)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName(dosya_yolu)
+            doc = QTextDocument()
+            doc.setHtml(belge_html())
+            doc.print_(printer)
+            QMessageBox.information(pencere, "PDF Kaydedildi", f"PDF oluşturuldu:\n{dosya_yolu}")
+
+        def kayit_belge_html(satis_id):
+            firma = firma_bilgisi_getir()
+            conn = baglan()
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT s.id, COALESCE(s.belge_turu, CASE WHEN s.hareket_id IS NULL THEN 'PROFORMA' ELSE 'SATIŞ' END),
+                       s.tarih, c.ad, c.telefon, c.adres, c.vergi_dairesi, c.vergi_no, s.toplam, s.notlar
+                FROM satislar s
+                LEFT JOIN cariler c ON c.id=s.cari_id
+                WHERE s.id=?
+            """, (satis_id,))
+            baslik_row = cur.fetchone()
+            cur.execute("""
+                SELECT urun_adi, grup_adi, adet, birim_fiyat, tutar
+                FROM satis_kalemleri
+                WHERE satis_id=?
+                ORDER BY id
+            """, (satis_id,))
+            kalemler = cur.fetchall()
+            conn.close()
+
+            if not baslik_row:
+                return "<html><body>Kayıt bulunamadı.</body></html>"
+
+            sid, belge_turu, tarih, cari_ad, telefon, adres, vergi_dairesi, vergi_no, toplam, notlar = baslik_row
+            satir_html = ""
+            for urun, grup, adet, fiyat, tutar in kalemler:
+                satir_html += f"""
+                <tr>
+                    <td>{urun or ''}</td>
+                    <td>{grup or ''}</td>
+                    <td style='text-align:right'>{float(adet or 0):g}</td>
+                    <td style='text-align:right'>{para_yaz(float(fiyat or 0))}</td>
+                    <td style='text-align:right'>{para_yaz(float(tutar or 0))}</td>
+                </tr>
+                """
+
+            return f"""
+            <html><body style='font-family:Arial, sans-serif; font-size:10pt;'>
+            {logo_html(190)}
+            <h1 style='color:#1E293B;margin-bottom:2px;text-align:center;'>{firma.get('firma_adi','')}</h1>
+            <div style='text-align:center;'>{firma.get('telefon','')} &nbsp
+            | &nbsp
+            {firma.get('adres','')}</div>
+            <div style='text-align:center;'>{firma.get('vergi_no','')} &nbsp
+            | &nbsp
+            {firma.get('vergi_dairesi','')} &nbsp
+            | &nbsp
+            {firma.get('eposta','')}</div>
+            <hr>
+            <h2 style='text-align:center;'>{belge_turu}</h2>
+            <table width='100%' style='margin-bottom:10px;'>
+                <tr><td><b>Kayıt No:</b> {sid}</td><td style='text-align:right'><b>Tarih:</b> {tarih}</td></tr>
+                <tr><td><b>Cari:</b> {cari_ad or '-'}</td><td style='text-align:right'><b>Telefon:</b> {telefon or '-'}</td></tr>
+                <tr><td><b>Vergi Dairesi:</b> {vergi_dairesi or '-'}</td><td style='text-align:right'><b>Vergi No:</b> {vergi_no or '-'}</td></tr>
+                <tr><td colspan='2'><b>Adres:</b> {adres or '-'}</td></tr>
+            </table>
+            <table width='100%' cellspacing='0' cellpadding='6' style='border-collapse:collapse;'>
+                <tr style='background:#0D47A1;color:white;'>
+                    <th align='left'>Ürün</th><th align='left'>Grup</th><th align='right'>Adet</th><th align='right'>Birim Fiyat</th><th align='right'>Tutar</th>
+                </tr>
+                {satir_html}
+                <tr><td colspan='4' style='text-align:right;border-top:1px solid #333;'><b>GENEL TOPLAM</b></td><td style='text-align:right;border-top:1px solid #333;'><b>{para_yaz(float(toplam or 0))}</b></td></tr>
+            </table>
+            <p><b>Not:</b> {notlar if notlar else '-'}</p>
+            </body></html>
+            """
+
+        def kayit_goruntule(satis_id):
+            detay = QDialog(pencere)
+            detay.setWindowTitle(f"Kayıt Görüntüle - {satis_id}")
+            detay.resize(900, 700)
+            ly = QVBoxLayout()
+
+            bas = QLabel("KAYIT GÖRÜNTÜLE")
+            bas.setStyleSheet("font-size:22px;font-weight:800;color:#1E293B;padding:8px;")
+            ly.addWidget(bas)
+
+            txt = QTextEdit()
+            txt.setReadOnly(True)
+            txt.setHtml(kayit_belge_html(satis_id))
+            ly.addWidget(txt, 1)
+
+            btns = QHBoxLayout()
+            btnYazdirDetay = QPushButton("Yazdır")
+            btnPdfDetay = QPushButton("PDF Kaydet")
+            btnKapatDetay = QPushButton("Kapat")
+            btnKapatDetay.setObjectName("GreyButton")
+            btns.addWidget(btnYazdirDetay)
+            btns.addWidget(btnPdfDetay)
+            btns.addStretch()
+            btns.addWidget(btnKapatDetay)
+            ly.addLayout(btns)
+
+            def detay_yazdir():
+                printer = QPrinter(QPrinter.HighResolution)
+                dialog = QPrintDialog(printer, detay)
+                dialog.setWindowTitle("Kayıt Yazdır")
+                if dialog.exec() != QDialog.Accepted:
+                    return
+                doc = QTextDocument()
+                doc.setHtml(kayit_belge_html(satis_id))
+                doc.print_(printer)
+
+            def detay_pdf():
+                dosya_yolu, _ = QFileDialog.getSaveFileName(detay, "Kayıt PDF Kaydet", f"Kayit_{satis_id}.pdf", "PDF Dosyası (*.pdf)")
+                if not dosya_yolu:
+                    return
+                if not dosya_yolu.lower().endswith(".pdf"):
+                    dosya_yolu += ".pdf"
+                printer = QPrinter(QPrinter.HighResolution)
+                printer.setOutputFormat(QPrinter.PdfFormat)
+                printer.setOutputFileName(dosya_yolu)
+                doc = QTextDocument()
+                doc.setHtml(kayit_belge_html(satis_id))
+                doc.print_(printer)
+                QMessageBox.information(detay, "PDF Kaydedildi", f"PDF oluşturuldu:\n{dosya_yolu}")
+
+            btnYazdirDetay.clicked.connect(detay_yazdir)
+            btnPdfDetay.clicked.connect(detay_pdf)
+            btnKapatDetay.clicked.connect(detay.close)
+            detay.setLayout(ly)
+            detay.exec()
 
         def satis_gecmisi():
-            return history_satis_gecmisi(pencere=pencere)
+            gecmis = QDialog(pencere)
+            gecmis.setWindowTitle("Satış / Proforma Geçmişi")
+            gecmis.resize(1050, 620)
+            ly = QVBoxLayout()
+            bas = QLabel("SATIŞ / PROFORMA GEÇMİŞİ")
+            bas.setStyleSheet("font-size:22px;font-weight:800;color:#1E293B;padding:8px;")
+            ly.addWidget(bas)
+            bilgi = QLabel("Bir kaydı seçip 'Seçili Kaydı Görüntüle' butonuna basın. İsterseniz satıra çift tıklayarak da açabilirsiniz.")
+            bilgi.setStyleSheet("font-size:12px;color:#64748B;padding-left:8px;")
+            ly.addWidget(bilgi)
+            tablo = QTableWidget()
+            tablo.setColumnCount(6)
+            tablo.setHorizontalHeaderLabels(["ID", "Tür", "Tarih", "Cari", "Toplam", "Not"])
+            tablo.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            tablo.setSelectionBehavior(QTableWidget.SelectRows)
+            tablo.setEditTriggers(QTableWidget.NoEditTriggers)
+            tablo.verticalHeader().setVisible(False)
+            ly.addWidget(tablo, 1)
+            conn = baglan()
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT s.id, COALESCE(s.belge_turu, CASE WHEN s.hareket_id IS NULL THEN 'PROFORMA' ELSE 'SATIŞ' END), s.tarih, c.ad, s.toplam, s.notlar
+                FROM satislar s
+                LEFT JOIN cariler c ON c.id=s.cari_id
+                ORDER BY s.id DESC
+                LIMIT 300
+            """)
+            rows = cur.fetchall()
+            conn.close()
+            tablo.setRowCount(len(rows))
+            for r, row in enumerate(rows):
+                sid, belge_turu, tarih, cari_ad, toplam, notlar = row
+                vals = [sid, belge_turu or "", tarih, cari_ad or "", para_yaz(float(toplam or 0)), notlar or ""]
+                for c, v in enumerate(vals):
+                    item = QTableWidgetItem(str(v))
+                    if c == 0:
+                        item.setData(1000, int(sid))
+                    tablo.setItem(r, c, item)
+
+            btns = QHBoxLayout()
+            btnGoruntule = QPushButton("Seçili Kaydı Görüntüle")
+            btnKapat = QPushButton("Kapat")
+            btnKapat.setObjectName("GreyButton")
+            btns.addWidget(btnGoruntule)
+            btns.addStretch()
+            btns.addWidget(btnKapat)
+            ly.addLayout(btns)
+
+            def secili_kaydi_ac():
+                row = tablo.currentRow()
+                if row < 0 or not tablo.item(row, 0):
+                    QMessageBox.warning(gecmis, "Uyarı", "Lütfen görüntülemek için bir kayıt seçin.")
+                    return
+                try:
+                    sid = int(tablo.item(row, 0).text())
+                except Exception:
+                    return
+                kayit_goruntule(sid)
+
+            btnGoruntule.clicked.connect(secili_kaydi_ac)
+            tablo.cellDoubleClicked.connect(lambda r, c: kayit_goruntule(int(tablo.item(r, 0).text())) if tablo.item(r, 0) else None)
+            btnKapat.clicked.connect(gecmis.close)
+            gecmis.setLayout(ly)
+            gecmis.exec()
+
+        def whatsapp_numarasi_hazirla(telefon):
+            rakamlar = "".join(ch for ch in str(telefon or "") if ch.isdigit())
+            if not rakamlar:
+                return ""
+            if rakamlar.startswith("00"):
+                rakamlar = rakamlar[2:]
+            if rakamlar.startswith("0"):
+                rakamlar = "90" + rakamlar[1:]
+            elif len(rakamlar) == 10:
+                rakamlar = "90" + rakamlar
+            return rakamlar
 
         def whatsapp_proforma_ac(cari, pdf_yolu, toplam):
-            return document_whatsapp_proforma_ac(
-                pencere=pencere,
-                cari=cari,
-                pdf_yolu=pdf_yolu,
-                toplam=toplam,
+            telefon = whatsapp_numarasi_hazirla(cari.get("telefon", "") if cari else "")
+            mesaj = (
+                "Merhaba, proforma teklifimiz hazırlanmıştır.\n"
+                f"Toplam: {para_yaz(float(toplam or 0))}\n\n"
+                "DAL ELEKTRONİK VE TEDARİK"
+            )
+            if telefon:
+                url = "https://web.whatsapp.com/send?phone=" + telefon + "&text=" + urllib.parse.quote(mesaj)
+            else:
+                url = "https://web.whatsapp.com/?text=" + urllib.parse.quote(mesaj)
+            webbrowser.open(url)
+            try:
+                os.startfile(os.path.dirname(pdf_yolu))
+            except Exception:
+                pass
+            QMessageBox.information(
+                pencere,
+                "WhatsApp Hazır",
+                "WhatsApp Web açıldı.\n\n"
+                "PDF otomatik eklenemez; açılan Proformalar klasöründen PDF dosyasını WhatsApp'a elle ekleyip gönderin.\n\n"
+                f"PDF:\n{pdf_yolu}"
             )
 
         def kaydet_proforma():

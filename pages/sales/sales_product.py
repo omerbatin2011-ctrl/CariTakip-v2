@@ -175,8 +175,14 @@ def urun_ekle(pencere: QWidget, durum: SalesState, urunleri_yukle: ReloadCallbac
     with db_baglan() as conn:
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO urunler(grup_id, ad, varsayilan_fiyat, stok) VALUES (?, ?, ?, ?)",
-            (durum["grup_id"], sonuc["ad"], sonuc["fiyat"], sonuc["stok"]),
+            "INSERT INTO urunler(grup_id, ad, varsayilan_fiyat, stok, barkod) VALUES (?, ?, ?, ?, ?)",
+            (
+                durum["grup_id"],
+                sonuc["ad"],
+                sonuc["fiyat"],
+                sonuc["stok"],
+                sonuc["barkod"],
+            ),
         )
         durum["urun_id"] = cur.lastrowid
         durum["urun_ad"] = sonuc["ad"]
